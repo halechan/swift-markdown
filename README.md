@@ -1,0 +1,1 @@
+A simple swift wrapper for [cmark](https://github.com/jgm/cmark).
