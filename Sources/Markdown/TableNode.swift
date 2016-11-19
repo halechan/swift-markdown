@@ -58,8 +58,12 @@ class TableNode : Node {
         var content = "    <tr>\n"
         for index in 0..<self.aligns.count {
             let style = self.aligns[index].style()
-            let item = row[index]
-            content += "      <th \(style)>" + item.render() + "</th>\n"
+            if index >= row.count {
+                content += "      <th \(style)>" + "</th>\n"
+            } else {
+                let item = row[index]
+                content += "      <th \(style)>" + item.render() + "</th>\n"
+            }
         }
         return content + "    </tr>\n"
     }

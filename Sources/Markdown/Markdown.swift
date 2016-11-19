@@ -70,7 +70,7 @@ public class Markdown {
                         while let nextLine = scanner.next() {
                             if nextLine.contains("|") {
                                 let row = nextLine.split(separator: "|").map { item in
-                                    return PlainNode(item)
+                                    return PlainNode(item.trim(" \t"))
                                 }
                                 rows.append(row)
                             } else {
@@ -81,19 +81,33 @@ public class Markdown {
                         
                         let table = TableNode()
                         table.aligns = aligns
-                        table.headers = line.split(separator: "|").map { item in
-                            return PlainNode(item)
+                        
+                        var cleanLine = line;
+                        
+                        if String(cleanLine).hasPrefix("<p>") {
+                            cleanLine = line.suffix(from: line.index(line.startIndex, offsetBy: 3))
                         }
+                        
+                        table.headers = cleanLine.split(separator: "|").map { item in
+                            return PlainNode(item.trim(" \t"))
+                        }
+                        
                         table.rows = rows
+                        
+                        if let lastItem = table.rows.last?.last as? PlainNode {
+                            if lastItem.render().hasSuffix("</p>") {
+                                lastItem.raw = lastItem.raw.prefix(lastItem.raw.count - 4)
+                            }
+                        }
                         
                         nodes.append(table)
                     } else {
-                        let node = PlainNode(line)
+                        let node = PlainNode(line, true)
                         nodes.append(node)
                         scanner.index -=  1
                     }
                 } else {
-                    let node = PlainNode(line)
+                    let node = PlainNode(line, true)
                     nodes.append(node)
                 }
             } else {

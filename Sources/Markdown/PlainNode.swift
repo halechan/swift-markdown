@@ -7,12 +7,15 @@
 //
 
 class PlainNode : Node {
-    let raw: String.CharacterView
-    init(_ raw: String.CharacterView) {
+    var raw: String.CharacterView
+    var hasNewLine = false
+
+    init(_ raw: String.CharacterView, _ hasNewLine:Bool = false) {
         self.raw = raw
+        self.hasNewLine = hasNewLine;
     }
     
     func render() -> String {
-        return String(raw)
+        return String(raw) + (self.hasNewLine ? "\n" : "")
     }
 }
