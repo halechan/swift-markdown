@@ -8,34 +8,6 @@
 
 import cmark
 
-public enum MarkdownError: Error {
-    case failed
-}
-
-public class Line {
-    let raw: String
-    init(_ s: String) {
-        raw = s
-    }
-}
-
-class Scanner {
-    var lines: [String.CharacterView] = []
-    var index: Int = 0
-    init(_ s: String) {
-        lines = s.characters.split(separator: "\n")
-    }
-    
-    func next() -> String.CharacterView? {
-        if index < lines.count {
-            let line = lines[index]
-            index += 1
-            return line
-        }
-        return nil
-    }
-}
-
 public class Markdown {
     public class func convert(_ s:String) -> String? {
         var buffer: String?
@@ -63,18 +35,18 @@ public class Markdown {
         
         var parsing = true
         while parsing {
-            if let line = scanner.next() {
+            if let line = scanner.readLine() {
                 if line.contains("|") {
-                    if let aligns = parseAligns(scanner.next()!) {
+                    if let aligns = parseAligns(scanner.readLine()!) {
                         var rows: [[Node]] = []
-                        while let nextLine = scanner.next() {
+                        while let nextLine = scanner.readLine() {
                             if nextLine.contains("|") {
                                 let row = nextLine.split(separator: "|").map { item in
                                     return PlainNode(item.trim(" \t"))
                                 }
                                 rows.append(row)
                             } else {
-                                scanner.index -= 1
+                                scanner.moveToPreviousLine()
                                 break
                             }
                         }
@@ -104,7 +76,7 @@ public class Markdown {
                     } else {
                         let node = PlainNode(line, true)
                         nodes.append(node)
-                        scanner.index -=  1
+                        scanner.moveToPreviousLine()
                     }
                 } else {
                     let node = PlainNode(line, true)
