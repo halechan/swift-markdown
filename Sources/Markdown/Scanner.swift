@@ -42,6 +42,11 @@ class Scanner {
     
     func next(sliceLength:Int , _ match: (String.CharacterView) -> Bool) -> Index? {
         var start = self.nextIndex
+        
+        if self.buffer.distance(from: start, to: self.buffer.endIndex) <= sliceLength {
+            return nil
+        }
+        
         var end = self.buffer.index(start, offsetBy: sliceLength)
         
         while end < self.buffer.endIndex && !match(self.buffer[start..<end])  {

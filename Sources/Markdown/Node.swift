@@ -12,6 +12,7 @@ public protocol NodeProtocol {
 
 public class Node : NodeProtocol {
     var children: [Node] = []
+    weak var parent: Node?
     
     public func render() -> String {
         return children.map { item in
