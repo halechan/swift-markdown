@@ -17,11 +17,33 @@ extension String.CharacterView {
             start = self.index(after: start)
         }
         
+        if start == self.endIndex {
+            return self[start..<self.endIndex]
+        }
+        
         var end = self.index(before: self.endIndex)
-        while end >= self.startIndex && list.contains(self[end]) {
+        while end > self.startIndex && list.contains(self[end]) {
             end = self.index(before: end)
         }
         
         return self[start...end]
+    }
+    
+    func hasPrefix(_ prefix: String) -> Bool {
+        let pattern = prefix.characters
+        
+        if pattern.count > self.count {
+            return false
+        }
+        
+        var index1 = self.startIndex
+        for index0 in pattern.indices {
+            if pattern[index0] != self[index1] {
+                return false
+            }
+            index1 = self.index(after: index1)
+        }
+        
+        return true
     }
 }

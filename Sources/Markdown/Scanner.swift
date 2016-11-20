@@ -44,7 +44,7 @@ class Scanner {
         var start = self.nextIndex
         var end = self.buffer.index(start, offsetBy: sliceLength)
         
-        while end <= self.buffer.endIndex && !match(self.buffer[start..<end])  {
+        while end < self.buffer.endIndex && !match(self.buffer[start..<end])  {
             start = self.buffer.index(after: start);
             end = self.buffer.index(after: end);
         }
@@ -112,6 +112,10 @@ class Scanner {
 
 extension Scanner {
     func readLine() -> CharacterView? {
+        if self.nextIndex >= self.buffer.endIndex {
+            return nil
+        }
+        
         if let end = self.next(Character("\n")) {
             let start = self.nextIndex
             self.nextIndex = self.buffer.index(after: end)

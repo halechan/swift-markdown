@@ -15,7 +15,7 @@ class PlainNode : Node {
         self.hasNewLine = hasNewLine;
     }
     
-    func render() -> String {
+    override func render() -> String {
         return String(raw) + (self.hasNewLine ? "\n" : "")
     }
 }

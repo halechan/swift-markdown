@@ -6,10 +6,16 @@
 //  Copyright © 2016年 Hale Chan. All rights reserved.
 //
 
-protocol Node {
+public protocol NodeProtocol {
     func render() -> String
 }
 
-extension Node {
+public class Node : NodeProtocol {
+    var children: [Node] = []
     
+    public func render() -> String {
+        return children.map { item in
+            return item.render()
+        }.joined()
+    }
 }

@@ -68,7 +68,7 @@ class TableNode : Node {
         return content + "    </tr>\n"
     }
     
-    func render() -> String {
+    override func  render() -> String {
         let head = renderHeader()
         let rows = self.rows.map { row in
             return renderRow(row)
@@ -83,7 +83,7 @@ func parseAlign(_ item : String.CharacterView) -> TableNode.Alignment? {
     var end = item.index(before: item.endIndex)
     
     func isEmptyChar(_ c:Character) -> Bool {
-        return c == " " || c == "\t"
+        return c == " " || c == "\t" || c == "\n"
     }
     
     while start < item.endIndex && isEmptyChar(item[start]) {
@@ -134,7 +134,7 @@ func parseAlign(_ item : String.CharacterView) -> TableNode.Alignment? {
 func parseAligns(_ l : String.CharacterView) -> [TableNode.Alignment]? {
     do {
         try l.forEach { char in
-            if !(char == " " || char == "\t" || char == ":" || char == "|" || char == "-") {
+            if !(char == " " || char == "\t" || char == ":" || char == "|" || char == "-" || char == "\n") {
                 throw ParseError.invalid
             }
         }
